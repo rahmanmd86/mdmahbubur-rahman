@@ -1,6 +1,8 @@
 package app;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -24,11 +26,6 @@ public class TransactionServiceController {
     @Autowired
     private TransactionService transactionService;
 
-    // @RequestMapping(value="/transactionservice/transaction/{id}")
-    // public Transaction transaction(@PathVariable long id, @RequestBody Transaction transaction) {
-    //     return new Transaction(id, );
-    // }
-
     @GetMapping(value = "/transactions")
     public ResponseEntity<?> getAllTransactions() {
         try {
@@ -41,17 +38,21 @@ public class TransactionServiceController {
         }  
     }
 
-    @GetMapping(value = "/transaction/{id}")
+    @GetMapping(value = "/transaction/{id}", produces = "application/json")
     public ResponseEntity<?> getTransactionByID(@PathVariable Long id) {
+        Map<String, Object> res = new HashMap<>();
         try {
             Transaction transaction = transactionService.getTransactionByID(id);
-            String trStr = String.format("{ \"amount\": %.1f, \"type\": \"%s\", \"parentID\": %d }", 
-                    transaction.getAmount(), transaction.getType(), transaction.getParentID());
-            return new ResponseEntity<String>(trStr, HttpStatus.OK);
+            res.put("amount", transaction.getAmount());
+            res.put("type", transaction.getType());
+            res.put("parentID", transaction.getParentID());
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } 
         catch (Exception e) {
             logger.error("Transaction with id {} not found.", id);
-            return new ResponseEntity<String>(("{ \"error\" : \"Transaction with id " + id + " not found.\" }"), HttpStatus.NOT_FOUND);
+            String errorMsg = "Transaction with id " + id + " not found.";
+            res.put("error", errorMsg);
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }  
     }
 
@@ -69,38 +70,47 @@ public class TransactionServiceController {
 
     @GetMapping(value = "/types/{type}")
     public ResponseEntity<?> getTransactionsByType(@PathVariable String type) {
+        Map<String, Object> res = new HashMap<>();
         try {
             List<Long> transactionIDs = transactionService.getTransactionsByType(type);
             return new ResponseEntity<List<Long>>(transactionIDs, HttpStatus.OK);
         } 
         catch (Exception e) {
             logger.error("Type with {} not found.", type);
-            return new ResponseEntity<String>(("{ \"error\" : \"Type with " + type + " not found.\" }"), HttpStatus.NOT_FOUND);
+            String errorMsg = "Type with " + type + " not found.";
+            res.put("error", errorMsg);
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         } 
     }
 
     @PutMapping(value = "/transaction/{id}")
     public ResponseEntity<?> updateTransaction(@Valid @RequestBody Transaction transaction, @PathVariable Long id) {
+        Map<String, Object> res = new HashMap<>();
         try {
             transactionService.updateTransaction(id, transaction);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } 
         catch (Exception e) {
             logger.error("Transaction with id {} not found.", id);
-            return new ResponseEntity<String>(("{ \"error\" : \"Transaction with id " + id + " not found.\" }"), HttpStatus.NOT_FOUND);
+            String errorMsg = "Transaction with id " + id + " not found.";
+            res.put("error", errorMsg);
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }  
     }
 
     @GetMapping(value = "/sum/{id}")
     public ResponseEntity<?> getSumOfAllAmountByID(@PathVariable Long id) {
+        Map<String, Object> res = new HashMap<>();
         try {
             Double sum = transactionService.calculateSumOfAmountByID(id);
-            String sumStr = String.format("{ \"sum\": %.1f }", sum);
-            return new ResponseEntity<String>(sumStr, HttpStatus.OK);
+            res.put("sum", sum);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } 
         catch (Exception e) {
             logger.error("Transaction with id {} not found.", id);
-            return new ResponseEntity<String>(("{ \"error\" : \"Transaction with id " + id + " not found.\" }"), HttpStatus.NOT_FOUND);
+            String errorMsg = "Transaction with id " + id + " not found.";
+            res.put("error", errorMsg);
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         } 
     }
 }

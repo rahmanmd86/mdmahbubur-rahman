@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
 
     private List<Transaction> transactions = Arrays.asList(
-        new Transaction(10L, 1000., "cars"),
-        new Transaction(11L, 2000., "cars"),
-        new Transaction(12L, 3000., "shopping", 10L)
+        new Transaction(10L, 0., "cars"),
+        new Transaction(11L, 0., "cars")
     );
 
+    // TODO: For testing
     public List<Transaction> getAllTransactions() {
         return transactions;
     }
@@ -32,9 +32,6 @@ public class TransactionService {
         Transaction currenTransaction = transactions.stream().filter(t -> t.getTransactionID().equals(id)).findFirst().get();
         if(currenTransaction != null) {
             transaction.setTransactionID(id);
-
-            System.out.println(transaction.getParentID());
-            
             if(currenTransaction.getParentID() != null && transaction.getParentID() == null) {
                 transaction.setParentID(currenTransaction.getParentID());
             }
