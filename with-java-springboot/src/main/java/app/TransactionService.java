@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
 
     private List<Transaction> transactions = Arrays.asList(
+        new Transaction(9L, 0., "cars"),
         new Transaction(10L, 0., "cars"),
         new Transaction(11L, 0., "cars")
     );

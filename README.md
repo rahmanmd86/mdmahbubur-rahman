@@ -11,17 +11,39 @@ Data hardcoded in TransactionService.java class to test the implementation asked
 
 ```
 private List<Transaction> transactions = Arrays.asList(
-        new Transaction(10L, 1000., "cars"),
-        new Transaction(11L, 2000., "cars"),
-        new Transaction(12L, 3000., "shopping", 10L)
+        new Transaction(9L, 0., "cars"),
+        new Transaction(10L, 0., "cars"),
+        new Transaction(11L, 0., "cars"),
     );
 ```
 
+# Folder structure
+```
+mdmahbubur-rahman
+    |-- with-java-springboot
+        |-- src
+            |-- main
+                |-- java
+                    |-- app
+                        |-- Application.java
+                        |-- Transaction.java
+                        |-- TransactionService.java
+                        |-- TransactionServiceController.java
+            |-- test
+                |-- java
+                    |-- app
+                        |-- ApplicationTest.java
+                        |-- SmokeTest.java
+```
+
 # Running the app
-Open ternimal and run
+- Open terminal
+- Clone the repo
+- Navigate to `with-java-springboot`
+- Run
 
 ```
-mvn clean install
+mvn clean install -DskipTests
 mvn spring-boot:run
 ```
 

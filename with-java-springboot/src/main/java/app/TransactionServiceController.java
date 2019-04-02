@@ -71,16 +71,16 @@ public class TransactionServiceController {
     @GetMapping(value = "/types/{type}")
     public ResponseEntity<?> getTransactionsByType(@PathVariable String type) {
         Map<String, Object> res = new HashMap<>();
-        try {
-            List<Long> transactionIDs = transactionService.getTransactionsByType(type);
+        List<Long> transactionIDs = transactionService.getTransactionsByType(type);
+        if (transactionIDs.size() > 0) {
             return new ResponseEntity<List<Long>>(transactionIDs, HttpStatus.OK);
-        } 
-        catch (Exception e) {
+        }
+        else {
             logger.error("Type with {} not found.", type);
             String errorMsg = "Type with " + type + " not found.";
             res.put("error", errorMsg);
             return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
-        } 
+        }
     }
 
     @PutMapping(value = "/transaction/{id}")
@@ -101,16 +101,8 @@ public class TransactionServiceController {
     @GetMapping(value = "/sum/{id}")
     public ResponseEntity<?> getSumOfAllAmountByID(@PathVariable Long id) {
         Map<String, Object> res = new HashMap<>();
-        try {
-            Double sum = transactionService.calculateSumOfAmountByID(id);
-            res.put("sum", sum);
-            return new ResponseEntity<>(res, HttpStatus.OK);
-        } 
-        catch (Exception e) {
-            logger.error("Transaction with id {} not found.", id);
-            String errorMsg = "Transaction with id " + id + " not found.";
-            res.put("error", errorMsg);
-            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
-        } 
+        Double sum = transactionService.calculateSumOfAmountByID(id);
+        res.put("sum", sum);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
